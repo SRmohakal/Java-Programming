@@ -203,3 +203,119 @@ Final Count (with sync): 2000 ✅
 ```
 
 ---
+## ✅ 1. Using `synchronized` Methods
+
+### 🧪 Example (Without Synchronization):
+
+```java
+class Caller {
+    void call(String msg) {
+        System.out.print("[" + msg);
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        System.out.println("]");
+    }
+}
+
+class CallerThread extends Thread {
+    Caller target;
+    String msg;
+
+    public CallerThread(Caller t, String s) {
+        target = t;
+        msg = s;
+    }
+
+    public void run() {
+        target.call(msg);
+    }
+}
+
+public class WithoutSync {
+    public static void main(String[] args) {
+        Caller caller = new Caller();
+        CallerThread t1 = new CallerThread(caller, "Hello");
+        CallerThread t2 = new CallerThread(caller, "Synchronized");
+        CallerThread t3 = new CallerThread(caller, "World");
+
+        t1.start(); t2.start(); t3.start();
+    }
+}
+```
+
+**Output (Race Condition):**
+```
+[Hello[Synchronized[World]
+]    ]    ]
+```
+
+---
+
+### ✅ Fixing It With `synchronized` Method:
+
+```java
+class Caller {
+    synchronized void call(String msg) {
+        System.out.print("[" + msg);
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        System.out.println("]");
+    }
+}
+```
+
+**Output:**
+```
+[Hello]
+[Synchronized]
+[World]
+```
+
+🎯 Now only **one thread accesses `call()` at a time**.
+
+---
+
+## ✅ 2. Using `synchronized` Block (More Fine-Grained Control)
+
+This is useful when:
+- You don’t own the class whose method you’re calling.
+- You want to **synchronize only part** of the code.
+
+### 🧪 Example:
+
+```java
+class Caller {
+    void call(String msg) {
+        System.out.print("[" + msg);
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        System.out.println("]");
+    }
+}
+
+class CallerThread extends Thread {
+    Caller target;
+    String msg;
+    Object lock;
+
+    public CallerThread(Caller t, String s, Object lock) {
+        target = t;
+        msg = s;
+        this.lock = lock;
+    }
+
+    public void run() {
+        synchronized(lock) {
+            target.call(msg);
+        }
+    }
+}
+
+public class SyncBlockExample {
+    public static void main(String[] args) {
+        Caller caller = new Caller();
+        Object lock = new Object(); // shared lock
+
+        new CallerThread(caller, "Hello", lock).start();
+        new CallerThread(caller, "From", lock).start();
+        new CallerThread(caller, "Java", lock).start();
+    }
+}
+```
