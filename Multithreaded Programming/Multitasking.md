@@ -222,8 +222,6 @@ This is a **Windows-specific** trick to:
 - Keep it **open after the process ends**
 - Run your Java class inside it
 
----
-
 ## 🔚 Summary:
 
 | Type              | Java Class      | Simulates                      |
