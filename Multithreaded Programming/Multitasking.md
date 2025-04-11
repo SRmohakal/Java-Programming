@@ -213,8 +213,6 @@ java Launcher
   Launched Calculator and TimerApp in separate processes.
   ```
 
----
-
 ### 🪟 Why `cmd /c start cmd /k`?
 
 This is a **Windows-specific** trick to:
