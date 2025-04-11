@@ -84,6 +84,7 @@ for (int i = 0; i < 1000000; i++) {
 4. **History Log Panel:**
    - Logs all conversions with timestamps and type info.
 
+```java
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -188,3 +189,5 @@ public class AutoboxingUnboxingGUI {
         SwingUtilities.invokeLater(AutoboxingUnboxingGUI::new);
     }
 }
+```
+---
